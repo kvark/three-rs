@@ -1181,7 +1181,7 @@ impl Renderer {
         shadow1: &h::ShaderResourceView<back::Resources, f32>,
         displacement_contributions: &[DisplacementContribution],
         displacements: (h::ShaderResourceView<back::Resources, [f32; 4]>, h::Sampler<back::Resources>),
-        joint_transform_buffer_view: h::ShaderResourceView<back::Resources, [f32; 4]>,
+        joint_transforms: h::ShaderResourceView<back::Resources, [f32; 4]>,
         displace: bool,
     ) {
         encoder.update_buffer(&inst_buf, instances, 0).unwrap();
@@ -1220,7 +1220,7 @@ impl Renderer {
                     depth_target: out_depth,
                     displacement_contributions: displacement_contributions_buf,
                     displacements,
-                    joint_transforms: joint_transform_buffer_view,
+                    joint_transforms,
                 };
                 encoder.draw(&slice, &pso.pbr, &data);
             }

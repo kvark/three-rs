@@ -109,12 +109,12 @@ impl Default for Line {
 #[derive(Derivative)]
 #[derivative(Clone, Debug, PartialEq, Hash, Eq)]
 pub struct Pbr {
-    /// Solid base color applied in the absense of `base_color_map`.
+    /// Solid base color applied in the absence of `base_color_map`.
     ///
     /// Default: `WHITE`.
     pub base_color_factor: Color,
 
-    /// Base color alpha factor applied in the absense of `base_color_map`.
+    /// Base color alpha factor applied in the absence of `base_color_map`.
     ///
     /// Default: `1.0` (opaque).
     #[derivative(Hash(hash_with = "util::hash_f32"))]
@@ -136,20 +136,20 @@ pub struct Pbr {
     pub roughness_factor: f32,
 
     /// Scalar multiplier in the range [0.0, 1.0] that controls the amount of
-    /// occlusion applied in the presense of `occlusion_map`.
+    /// occlusion applied in the presence of `occlusion_map`.
     ///
     /// Default: `1.0`.
     #[derivative(Hash(hash_with = "util::hash_f32"))]
     pub occlusion_strength: f32,
 
-    /// Solid emissive color applied in the absense of `emissive_map`.
+    /// Solid emissive color applied in the absence of `emissive_map`.
     ///
     /// Default: `BLACK`.
     pub emissive_factor: Color,
 
     /// Scalar multiplier applied to each normal vector of the `normal_map`.
     ///
-    /// This value is ignored in the absense of `normal_map`.
+    /// This value is ignored in the absence of `normal_map`.
     ///
     /// Default: `1.0`.
     #[derivative(Hash(hash_with = "util::hash_f32"))]
@@ -328,5 +328,21 @@ impl From<Sprite> for Material {
 impl From<Wireframe> for Material {
     fn from(params: Wireframe) -> Self {
         Material::Wireframe(params)
+    }
+}
+
+impl Material {
+    /// Returns true if the material is fully opaque.
+    pub fn is_opaque(&self) -> bool {
+        match *self {
+            Material::Basic(_) => true,
+            Material::CustomBasic(_) => true,
+            Material::Line(_) => true,
+            Material::Lambert(_) => true,
+            Material::Phong(_) => true,
+            Material::Pbr(_) => true,
+            Material::Sprite(_) => false,
+            Material::Wireframe(_) => true,
+        }
     }
 }
